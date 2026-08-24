@@ -214,6 +214,14 @@
   }
   .like-btn.liked{color:var(--accent); border-color:var(--accent);}
 
+  /* Loader spinner for infinite scroll */
+  #infiniteLoader{
+    text-align:center;
+    padding:20px;
+    color:var(--text-dim);
+    font-size:13px;
+  }
+
   footer{
     text-align:center;
     padding:30px 16px 10px;
@@ -223,24 +231,6 @@
     margin-top:20px;
   }
   footer a{color:var(--accent2);}
-
-  .load-more-wrap{
-    display:flex;
-    justify-content:center;
-    padding:10px 16px 20px;
-  }
-  .load-more{
-    background:var(--bg-card);
-    border:1px solid var(--border);
-    color:var(--text);
-    font-size:13px;
-    font-weight:600;
-    padding:11px 26px;
-    border-radius:999px;
-    cursor:pointer;
-  }
-  .load-more:active{background:var(--bg-card-hover);0}
-  .load-more.hidden{display:none;}
 </style>
 
 <!-- Popunder Script -->
@@ -276,9 +266,7 @@
   <!-- Dynamic cards injected via JavaScript -->
 </main>
 
-<div class="load-more-wrap">
-  <button class="load-more" id="loadMoreBtn">Load More Videos</button>
-</div>
+<div id="infiniteLoader">Loading more videos...</div>
 
 <!-- Bottom Native Banner Ad -->
 <script async="async" data-cfasync="false" src="https://undergocutlery.com/38de5593f6d55bb5c1bf2fbed141a462/invoke.js"></script>
@@ -338,7 +326,7 @@
   const SITE_URL = "https://gta6-leaks.vercel.app";
   const WHATSAPP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.83 14.17c-.24.68-1.4 1.32-1.94 1.4-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.78-4.15-4.93-4.35-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2.01.89 2.16.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.62-.14.26.09 1.63.77 1.91.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>';
 
-  let itemsPerPage = 12;
+  let itemsPerPage = 8;
   let currentIndex = 0;
 
   function buildCard(video){
@@ -382,6 +370,11 @@
   }
 
   function loadMoreVideos() {
+    if (currentIndex >= VIDEOS.length) {
+      document.getElementById('infiniteLoader').style.display = 'none';
+      return;
+    }
+
     const grid = document.getElementById('videoGrid');
     const nextBatch = VIDEOS.slice(currentIndex, currentIndex + itemsPerPage);
     
@@ -392,16 +385,20 @@
     currentIndex += itemsPerPage;
 
     if (currentIndex >= VIDEOS.length) {
-      document.getElementById('loadMoreBtn').classList.add('hidden');
+      document.getElementById('infiniteLoader').textContent = "No more videos to load";
     }
   }
 
-  // Initial load
-  loadMoreVideos();
+  // Intersection Observer for Infinite Scrolling
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadMoreVideos();
+      }
+    });
+  }, { rootMargin: '200px' });
 
-  document.getElementById('loadMoreBtn').addEventListener('click', function(){
-    loadMoreVideos();
-  });
+  observer.observe(document.getElementById('infiniteLoader'));
 
   function toggleLike(btn){
     btn.classList.toggle('liked');
