@@ -8,54 +8,6 @@
 <title>StreamHub — Watch & Share</title>
 <meta name="description" content="Fast, mobile-first video streaming — watch and share instantly.">
 
-<script>
-  // Advanced & Smooth Adblock Detector with Auto-Dismiss
-  (function() {
-    let blockDiv = null;
-
-    function createBlockWall() {
-      if (!blockDiv) {
-        blockDiv = document.createElement('div');
-        blockDiv.id = 'adblock-wall';
-        blockDiv.innerHTML = `
-          <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,12,0.98);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px;font-family:sans-serif;">
-            <h2 style="color:#ff2d55;font-size:26px;margin-bottom:12px;">Adblocker / Brave Shield Detected! </h2>
-            <p style="color:#9a9aa2;font-size:14px;max-width:400px;margin-bottom:24px;line-height:1.5;">Please turn off Brave Shields or disable your Adblocker to stream and watch GTA 6 clips for free.</p>
-            <button onclick="location.reload()" style="background:#ff2d55;color:#fff;border:none;padding:12px 28px;border-radius:999px;font-weight:bold;font-size:14px;cursor:pointer;box-shadow:0 0 15px rgba(255,45,85,0.4);">I disabled it, Reload Page</button>
-          </div>
-        `;
-        document.body.appendChild(blockDiv);
-      }
-    }
-
-    function removeBlockWall() {
-      if (blockDiv) {
-        blockDiv.remove();
-        blockDiv = null;
-      }
-    }
-
-    function checkAds() {
-      const topAd = document.getElementById('container-5c5f0b5a928b762d0e6d112e85cd1b97');
-      const bottomAd = document.getElementById('container-38de5593f6d55bb5c1bf2fbed141a462');
-      
-      // Check if containers have height or content loaded
-      const isTopBlocked = topAd && topAd.offsetHeight === 0;
-      const isBottomBlocked = bottomAd && bottomAd.offsetHeight === 0;
-
-      if (isTopBlocked || isBottomBlocked) {
-        createBlockWall();
-      } else {
-        removeBlockWall(); // Agar ads load ho gaye toh wall automatic hat jayegi!
-      }
-    }
-
-    // Continuously check every 1 second until ads load successfully
-    window.addEventListener('DOMContentLoaded', () => {
-      setInterval(checkAds, 1000);
-    });
-  })();
-</script>
 
 
 
